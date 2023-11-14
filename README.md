@@ -12,7 +12,7 @@ The project features a modern resume website hosted on AWS, highlighting my skil
 
 ## Folder Structure
 - /documentation: Detailed project documentation.
-    - [Summary](./documentation/summary.md)
+    - [Summary](./documentation/summary.md): A guide to navigating through the documentation, serving as an index or table of contents for easy access to different sections of the project.
 - /code: HTML, CSS, and JavaScript for the website.
 - /assets: Images and media used in the website.
 
