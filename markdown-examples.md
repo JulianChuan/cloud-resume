@@ -29,7 +29,7 @@
 
 - Third item
 
-    `code should be tabbed twice`
+    `code should look orange in vs code`
 
 ---
 
