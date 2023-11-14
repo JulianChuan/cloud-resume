@@ -11,9 +11,10 @@ This repository serves as my portfilio for the Cloud Resume Challenge, showcasin
 The project features a modern resume website hosted on AWS, highlighting my skills and experience.
 
 ## Folder Structure
-- /Documentation: Detailed project documentation.
-- /Code: HTML, CSS, and JavaScript for the website.
-- /Assets: Images and media used in the website.
+- /documentation: Detailed project documentation.
+    - [Summary](./documentation/summary.md)
+- /code: HTML, CSS, and JavaScript for the website.
+- /assets: Images and media used in the website.
 
 ## Setup Instructions
 To view the project locally, follow these steps:
