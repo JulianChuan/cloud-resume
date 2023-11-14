@@ -1,4 +1,4 @@
-[Markdown Cheat Sheet] (https://www.markdownguide.org/cheat-sheet/)
+[Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
 
 # Heading level 1
 
@@ -12,16 +12,23 @@
 
 > blockquote
 
-1. First item
-    - First and a half item
-2. Second item
-3. Third item
+1. This is the first list item.
+2. Here's the second list item.
+
+    I need to add another paragraph below the second list item.
+
+3. And here's the third list item.
 
 - First item
+
     Tab will add another paragraph
+
 - Second item
+
     > I can tab and add other elements
+
 - Third item
+
         `code should be tabbed twice`
 
 ---
@@ -50,7 +57,7 @@ term
 - [ ] Update the website
 - [ ] Contact the media
 
-[:rocket: Emojis :rocket:] (https://gist.github.com/rxaviers/7360908)
+[:rocket: Emojis :rocket:](https://gist.github.com/rxaviers/7360908)
 
 I need to highlight these ==very important words==.
 
