@@ -1,4 +1,4 @@
-# AWS Account Setup for Cloud Resume
+# AWS Account Setup
 
 ## Step 1: Signing Up for AWS
 - Go to [aws.amazon.com](https://aws.amazon.com/) and click on **Create an AWS Account** at the top right of the screen.
