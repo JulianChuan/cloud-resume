@@ -1,4 +1,4 @@
-# Cloud Resume - Setup Documentation
+# Setup Table of Contents
 
 Welcome to the setup documentation for the Cloud Resume! This folder contains detailed steps and configurations needed to set up the environment for your Cloud Resume.
 
