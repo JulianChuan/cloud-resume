@@ -7,9 +7,9 @@ Welcome to my Cloud Resume Portfolio! This repository acts as both my profession
 Embark on an exploration of a contemporary resume website hosted seamlessly on AWS. Discover a showcase of my skill set and experiences, elegantly presented to reflect my expertise and proficiency.
 
 ## Folder Structure
-- /documentation: Detailed project documentation.
+- [Documentation Folder](documentation/): Detailed project documentation.
     - [Summary](./documentation/summary.md): A guide to navigating through the documentation, serving as an index or table of contents for easy access to different sections of the project.
-- /code: HTML, CSS, and JavaScript for the website.
+- [/code: HTML, CSS, and JavaScript for the website.
 - /assets: Images and media used in the website.
 
 ## Setup Instructions
