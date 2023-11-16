@@ -8,7 +8,7 @@ This folder covers the initial setup phase of the Cloud Resume Challenge, includ
 
 ### Table of Contents
 
-- [AWS Account Setup](aws-account-setup.md): Detailed instructions for setting up an AWS account.
+- [AWS Account Setup](01-aws-account-setup.md): Detailed instructions for setting up an AWS account.
 
 ## Next Steps
 
