@@ -55,7 +55,7 @@ Having separate AWS accounts for different purposes such as a *General* account 
 
 We will be starting from [Step 1](#step-1-signing-up-for-aws), however I will detail the slight adjustments for our *Production* account.
 - Here are the following changes in [Step 1a](#step-1a-creating-the-general-aws-account):
-  - change the format for *Root user email address* to something like `user+resumeproduction@example.com`.
-  - apply the same formatting to the *AWS account name*. It should look similiar to `user-cloud-resume-production`.
+  - Change the format for *Root user email address* to something like `user+resumeproduction@example.com`.
+  - Apply the same formatting to the *AWS account name*. It should look similiar to `user-cloud-resume-production`.
 - As for [Step 1b](#step-1b-enable-iam-user-and-role-access-to-billing-info), [Step 2a](#step-2a-adding-multi-factor-authentication-mfa), and [Step 2b](#step-2b-creating-a-budget):
-  - everything is the same expect we will be using our *Production* account instead of the *General* account.
+  - Everything is the same expect we will be using our *Production* account instead of the *General* account.
