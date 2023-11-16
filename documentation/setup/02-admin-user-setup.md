@@ -27,4 +27,4 @@ Initally, the *iamadmin* won't have any permissions except those to change the p
 - If you've followed these exact steps, the *Account ID* should be pre-populated with our chosen *Account Alias* name.<br>
   **Enter** the *IAM user name* and *Password* from the previous steps and **Sign in**.
 - This time you will now be logged in as the *iamadmin* user of the *General* AWS account. If you click the account drop down, you will be able this information. If you'll recall, we gave this *IAM user* admin permissions so it does have full control over this account - the same access as the *Root User*.
-- The last step we need to do is to [Add MFA](01-aws-account-setup.md#step-2a-adding-multi-factor-authentication-mfa) on our *iamadmin* user.
+- The last step we need to do is to [Add MFA](01-aws-account-setup.md#step-2a-adding-multi-factor-authentication-mfa) on our *iamadmin* user - similar to what we did for the *Root User*.
