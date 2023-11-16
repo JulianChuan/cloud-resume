@@ -53,7 +53,7 @@ Controlling costs within AWS is important if you want to avoid any bill shock at
 ## Step 3: Creating the Production Account
 Having separate AWS accounts for different purposes such as a *General* account and a *Production* account is a best practice for several reasons. By adopting this approach of using separate accounts for different purposes, organizations can achieve better security, resource management, and operational efficiency within their AWS infrastructure.
 
-We will be starting from [Step 1](#Step-1:-Signing-Up-for-AWS), however I will detail the slight adjustments for our *Production* account.
+We will be starting from [Step 1](#step-1-signing-up-for-aws), however I will detail the slight adjustments for our *Production* account.
 - Here are the following changes in [Step 1a](#step-1a):
   - change the format for *Root user email address* to something like `user+resumeproduction@example.com`.
   - apply the same formatting to the *AWS account name*. It should look similiar to `user-cloud-resume-production`.
