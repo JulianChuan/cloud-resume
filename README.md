@@ -1,14 +1,10 @@
-# cloud-resume
-
-[markdown](https://www.markdownguide.org/cheat-sheet/)
-
 # Julian Cloud Resume
 
 ## Introduction
-This repository serves as my portfilio for the Cloud Resume Challenge, showcasing a cloud-hosted resume website using AWS and HTML/CSS.
+Welcome to my Cloud Resume Portfolio! This repository acts as both my professional showcase and a comprehensive guide for crafting an impressive cloud-hosted resume website leveraging AWS and HTML/CSS.
 
 ## Project Overview
-The project features a modern resume website hosted on AWS, highlighting my skills and experience.
+Embark on an exploration of a contemporary resume website hosted seamlessly on AWS. Discover a showcase of my skill set and experiences, elegantly presented to reflect my expertise and proficiency.
 
 ## Folder Structure
 - /documentation: Detailed project documentation.
