@@ -22,5 +22,12 @@ The *Block all public access* checkbox is a safety precaution. Unchecking this b
 - Under *Index document*, type in `index.html`. Similarly for the *Error document - optional*, we're going to type in `error.html`.
 - Click **Save changes**.
 
-
+## Uploading Objects
+- Navigate to the *Objects* tab and click on **Upload**.
+- Click on **Add files** and select the following files:
+  - *index.html*
+  - *error.html*
+  - *styles.css*
+  - *script.js*
+  - *headshot.jpg*
 
