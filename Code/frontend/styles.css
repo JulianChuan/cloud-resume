@@ -1,0 +1,147 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    font-family: 'Helvetica', 'Verdana', sans-serif;
+    background-color: #f8f8f8;
+    margin-left: 2em; 
+	margin-top: 1em;
+}
+
+.top-section {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 2em; 
+}
+
+.headshot-container {
+    flex: 0 0 auto; 
+    margin-right: 2em; 
+}
+
+.contact-info {
+    flex: 1; 
+    text-align: left;
+}
+
+.resume-headshot {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #4CAF50;
+    object-fit: cover;
+}
+
+.resume-section {
+    margin-bottom: 2em;
+    padding: 1em; 
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.2);
+}
+
+.resume-section h2 {
+    margin-bottom: .5em;
+    color: #333;
+    font-weight: 600;
+}
+
+ul {
+    padding-left: 20px;
+    list-style-type: none; 
+}
+
+li {
+    margin-bottom: .5em;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+#education p {
+    font-style: italic;
+}
+
+.degree {
+    font-weight: bold;
+    display: block; 
+    margin-top: 1em; 
+}
+
+.school {
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+.timeline-content p {
+    font-style: italic;
+    margin-top: 0.5em;
+    color: #555; 
+}
+
+.resume-header {
+    text-align: center;
+}
+
+.resume-headshot {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #4CAF50; 
+}
+
+/* Timeline Styles */
+.timeline {
+    border-left: 3px solid #4CAF50;
+    padding-left: 20px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.timeline-entry {
+    margin-top: 1em;
+	cursor: pointer;
+    transition: all 0.3s ease-in-out; 
+}
+
+.timeline-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    position: absolute;
+    left: -6px;
+    top: 0;
+}
+
+.timeline-content h3,
+.timeline-content p {
+    margin: 5px 0;
+    color: #333; 
+}
+
+/* Transition for smooth toggling of description */
+.timeline-content p {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Style for hiding/showing description */
+.hidden {
+    display: none;
+}
+
+.shown {
+    display: block;
+}
+
+/* Section Styles */
+.resume-section h2 {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    display: inline-block;
+    font-size: 1.2em; 
+}
