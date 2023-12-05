@@ -9,4 +9,4 @@
         "Resource":["arn:aws:s3:::examplebucket/*"]
       }
     ]
-  }
+}
