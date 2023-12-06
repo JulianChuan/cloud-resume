@@ -1,6 +1,6 @@
 # Static Website Hosting
 
-## Creating an S3 Bucket
+## Step 1: Creating an S3 Bucket
 - Log into the *IAM Admin User* of the *General* AWS account.
 - From the *Console Home*, you will see a *Search* bar at the top of the screen. Search and click on `S3` to open the *S3 dashboard*. Click **Create bucket**.
 - My *Bucket name* will be `firstlast.com` and I will be selecting *US East (N. Virginia) us-east-1* as my AWS Region.
@@ -22,8 +22,8 @@ The *Block all public access* checkbox is a safety precaution. Unchecking this b
 - Under *Index document*, type in `index.html`. Similarly for the *Error document - optional*, we're going to type in `error.html`.
 - Click **Save changes**.
 
-## Organizing Your S3 Bucket
-### Creating a Folder
+## Step 2: Organizing Your S3 Bucket
+### Step 2a: Creating a Folder
 - From the *Buckets* dashboard, scroll down to *General purpose buckets* and click on the bucket we just created.
 - To keep things organized and consistent, I will be structing my S3 bucket similar to this repo. Make sure you are on the *Objects* tab, and click **Create folder**.
 - For my *Folder name*, I will be using `assets`. You can name this whatever you'd like but this directory is where I will be storing files such as a profile picture.
@@ -31,9 +31,9 @@ The *Block all public access* checkbox is a safety precaution. Unchecking this b
 > Although there might not be immediate critical needs for encryption, understanding the encryption options available, potential areas where encryption may be needed, and adopting good security practices is beneficial for security principles. Additionally, we have the flexibility to enable encryption on objects after they have been uploaded.
 - Click **Create folder** when ready.
 
-We will now repeat the same steps in [Step 1](#step-1-signing-up-for-aws) for our second folder. The only difference this time is I will be creating a `code` folder. Here is where we'll store actual code files that provide the functionality of our website such as scripts and HTML.
+We will now repeat the same steps in [Step 2a](#step-1a-creating-a-folder) for our second folder. The only difference this time is I will be creating a `code` folder. Here is where we'll store actual code files that provide the functionality of our website such as scripts and HTML.
 
-### Creating a Subfolder
+### Step 2b: Creating a Subfolder
 I intent to structure my codebase into distinct sections for both frontend and backend components.
 - Now that we have our *assets* and *code* folders, click to open the *code/* folder from the *Objects* tab.
 - At the top of your screen, you can follow the directory to ensure we are within our *code/* folder. Click on **Create folder**.
@@ -41,10 +41,10 @@ I intent to structure my codebase into distinct sections for both frontend and b
 > Again, encrypting these files/folders might not be necessary, especially if they don't contain sensitive data.
 - Click **Create folder**.
 
-Similarly as before, we will now designate our *backend* folder. Follow [Step 1](#step-1-signing-up-for-aws) with the following changes:
+Similarly as before, we will now designate our *backend* folder. Follow [Step 2b](#step-2b-creating-a-subfolder) with the following changes:
 - Name the new subfolder `backend`.
 
-## Uploading Objects
+## Step 3: Uploading Objects
 Objects are the fundamental entities stored in Amazon S3.
 - When you navigate to the *Objects* tab and see an orange **Upload** button, go ahead and click it.
 - Click on **Add files** and select the following files:
@@ -62,10 +62,9 @@ Objects are the fundamental entities stored in Amazon S3.
   - *script.js*
 - Verify the *Destination*, click **Upload**, and **Close** out when completed.
 
-## Adding a Bucket Policy Granting Object Access
+## Step 4: Adding a Bucket Policy
 Currently we have no method of providing any credential to S3 when we're accessing objects via static website hosting. We need to give permissions to any unauthenticated or anonymous users to access the objects within our bucket.
 
-### Adding a Bucket Policy
 - From the *S3 Buckets* dashboard, select your bucket and navigate to the *Permissions* tab.
 - Scroll to the *Bucket policy* section and click on **Edit**.
 - In a separate window or tab, copy the code from the [public-read-access-policy file](Code/backend/public-read-access-policy.json).
