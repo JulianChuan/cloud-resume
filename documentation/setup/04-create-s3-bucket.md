@@ -31,7 +31,7 @@ The *Block all public access* checkbox is a safety precaution. Unchecking this b
 > Although there might not be immediate critical needs for encryption, understanding the encryption options available, potential areas where encryption may be needed, and adopting good security practices is beneficial for security principles. Additionally, we have the flexibility to enable encryption on objects after they have been uploaded.
 - Click **Create folder** when ready.
 
-We will now repeat the same steps in [Step 2a](#step-1a-creating-a-folder) for our second folder. The only difference this time is I will be creating a `code` folder. Here is where we'll store actual code files that provide the functionality of our website such as scripts and HTML.
+We will now repeat the same steps in [Step 2a](#step-2a-creating-a-folder) for our second folder. The only difference this time is I will be creating a `code` folder. Here is where we'll store actual code files that provide the functionality of our website such as scripts and HTML.
 
 ### Step 2b: Creating a Subfolder
 I intent to structure my codebase into distinct sections for both frontend and backend components.
