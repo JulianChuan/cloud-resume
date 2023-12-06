@@ -67,7 +67,7 @@ Currently we have no method of providing any credential to S3 when we're accessi
 
 - From the *S3 Buckets* dashboard, select your bucket and navigate to the *Permissions* tab.
 - Scroll to the *Bucket policy* section and click on **Edit**.
-- In a separate window or tab, copy the code from the [public-read-access-policy file](../../Code/backend/public-read-access-policy.json).
+- In a separate window or tab, copy the code from the [public-read-access-policy](../../Code/backend/public-read-access-policy.json) file.
   - It should look like this:
       ```json
       {
