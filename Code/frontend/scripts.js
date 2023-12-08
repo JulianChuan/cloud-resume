@@ -12,23 +12,23 @@ document.addEventListener("DOMContentLoaded", function () {
       description: `Elevated blockchain integration strategies, minting over 960 NFTs and transforming digital ecosystems through cutting-edge Web3 integration. Guided high-touch clients and billion-dollar businesses in integrating Immutable X protocol, driving unparalleled opportunities in blockchain-based applications.`,
     },
     {
-      date: "ZenLedger | January 2022 - September 2022",
+      date: "ZenLedger | June 2022 - September 2022",
       title: "(Q3-Q4) Growth / Product Development Specialist",
       description: `Optimized sales performance with dynamic funnels and outreach strategies, launching APIs for Avalanche and Fantom blockchains. Enhanced Uniswap liquidity pool functionality, empowering professionals in navigating cryptocurrency taxation effectively.`,
     },
     {
-      date: "ZenLedger | January 2022 - September 2022",
+      date: "ZenLedger | January 2022 - June 2022",
       title: "(Q1-Q2) Solutions Engineer",
       description: `Empowered prestigious organizations like RSM, EY, and government entities through captivating demonstrations, webinars, and educational initiatives. Developed Zenledger University, educating users on cryptocurrency and blockchain fundamentals.`,
     },
     {
-      date: "Appsketiers | January 2022 - September 2022",
+      date: "Appsketiers | August 2018 - December 2021",
       title: "Account Executive",
       description:
         "Fostered exceptional client relationships, smashing sales targets, and achieving revenue growth of over $1.4M. Managed and nurtured 340+ accounts, highlighting the tangible impact of expertise and exceptional customer experience.",
     },
     {
-      date: "Appsketiers | January 2022 - September 2022",
+      date: "Appsketiers | May 2018 - June 2020",
       title: "Product Designer",
       description:
         "Designed intuitive mobile applications, boosting user satisfaction and engagement for over 30 B2B and B2C clients. Implemented Agile practices, slashing project delays by 30%, and nurturing a culture of innovation and self-organization.",
