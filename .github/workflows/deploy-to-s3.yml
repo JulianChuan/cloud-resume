@@ -9,11 +9,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3  # Updated to a newer version
+    - uses: actions/checkout@v3
 
     - name: Reorganize Files for Deployment
       run: |
-        # [Insert the file reorganization script here]
+        # Create the necessary directory structure for deployment
+        mkdir -p s3-deployment/code/frontend
+        mkdir -p s3-deployment/assets
+
+        # Copy Code/frontend contents to s3-deployment/code/frontend
+        cp -r Code/frontend/* s3-deployment/code/frontend/
+
+        # Move index.html and error.html to the root of s3-deployment
+        mv s3-deployment/code/frontend/index.html s3-deployment/index.html
+        mv s3-deployment/code/frontend/error.html s3-deployment/error.html
+
+        # Copy Assets contents to s3-deployment/assets
+        cp -r Assets/* s3-deployment/assets/
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
