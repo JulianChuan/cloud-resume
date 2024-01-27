@@ -11,12 +11,28 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Reorganize Files for Deployment
+      run: |
+        # Create the necessary directory structure for deployment
+        mkdir -p s3-deployment/code/frontend
+        mkdir -p s3-deployment/assets
+
+        # Copy Code/frontend contents to s3-deployment/code/frontend
+        cp -r Code/frontend/* s3-deployment/code/frontend/
+
+        # Move index.html and error.html to the root of s3-deployment
+        mv s3-deployment/code/frontend/index.html s3-deployment/index.html
+        mv s3-deployment/code/frontend/error.html s3-deployment/error.html
+
+        # Copy Assets contents to s3-deployment/assets
+        cp -r Assets/* s3-deployment/assets/
+
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --follow-symlinks --delete
+        source_dir: 's3-deployment'
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        SOURCE_DIR: 'Code/frontend'
