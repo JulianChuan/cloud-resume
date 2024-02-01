@@ -20,8 +20,8 @@ jobs:
       run: |
         mkdir -p s3-deployment/assets
         mkdir -p s3-deployment/code/frontend
-        cp -r Assets/* s3-deployment/assets/
-        cp -r Code/frontend/* s3-deployment/code/frontend/
+        cp -r assets/* s3-deployment/assets/
+        cp -r code/frontend/* s3-deployment/code/frontend/
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
