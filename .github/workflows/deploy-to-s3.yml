@@ -18,17 +18,15 @@ jobs:
 
     - name: Reorganize Files for Deployment
       run: |
-        mkdir -p deployment/assets
-        mkdir -p deployment/code
-        cp -r assets/* deployment/assets/
-        cp -r code/frontend/* deployment/code/
-        cp code/frontend/index.html deployment/
-        cp code/frontend/error.html deployment/
+        cp -r assets/* .
+        cp -r code/frontend/* .
+        cp code/frontend/index.html .
+        cp code/frontend/error.html .
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
       with:
-        args: --follow-symlinks --delete --source-dir 'deployment' --exclude '*' --include 'assets/**' --include 'code/**' --include 'index.html' --include 'error.html'
+        args: --follow-symlinks --delete --exclude '*' --include 'assets/**' --include 'code/**' --include 'index.html' --include 'error.html'
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
