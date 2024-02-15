@@ -11,7 +11,40 @@
 #### Set Permissions
 - We will select *Attach policies directly* and click **Create policy**. This should open a new tab where we can specify permissions.
 - Keeping the Principle of Least Priviledge in mind, we can either use the *Visual* or *JSON* policy editor to create a new policy solely for our GitHub Actions.
-  - You can copy mine from [here](Code/backend/github-cicd-user-policy.json).
+  - You can copy mine from [here](../../code/backend/github-cicd-user-policy.json).
+  - It should look like this:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListBucketContents",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::examplebucket"
+            ]
+        },
+        {
+            "Sid": "ReadWriteBucketObjects",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::examplebucket*"
+            ]
+        }
+    ]
+}
+```
+
+
+  
 - Once the appropriate permissions are set, click **Next**.
 #### Review and Create
 - For the *policy name*, I will be using `GithubCICDAccess`.
