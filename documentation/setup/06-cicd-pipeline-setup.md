@@ -1,4 +1,4 @@
-# GitHub Actions
+# CI/CD Pipeline
 <sub> The instructions below will assume your source code is hosted on GitHub. </sub>
 
 ## Create IAM User
@@ -79,4 +79,36 @@
 - Navigate to your repo and click on **Actions** in the tab options at the top of the screen.
 - We will be building a new workflow so click on **set up a workflow yourself**. This will create a new `main.yml` file under a `.github/workflows` directory in your repo.
   - Optionally, you can choose another name. I will be using `deploy-to-s3.yml`
-- 
+- Here is an example you can adjust as needed:
+  ```yaml
+  name: Deploy to S3
+  
+  on:
+    push:
+      branches:
+        - main # Change this to your main branch name
+  
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+  
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: your-aws-region # Replace with your AWS region
+  
+        - name: Deploy to S3
+          uses: aws-actions/aws-s3-deploy@v2
+          with:
+            bucket-name: your-s3-bucket-name
+            local-path: ./path/to/local/directory # Replace with the local directory containing the files you want to deploy
+            overwrite: true # Set to true if you want to overwrite existing files in the bucket
+  ```
+  > Make sure to replace the placeholders `your-aws-region`, `your-s3-bucket-name`, and `./path/to/local/directory` with your actual AWS region, S3 bucket name, and local directory path respectively. Additionally, you need to set up AWS access keys as GitHub secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with the appropriate IAM permissions to access the S3 bucket.This workflow will trigger on every push to the `main` branch and deploy the contents of the specified local directory to the specified S3 bucket using AWS credentials configured via secrets.
+- When completed, click on **Commit changes...** then **Commit changes**.
