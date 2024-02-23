@@ -1,0 +1,382 @@
+/* Import Google Font */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+/* Base Styles */
+body {
+  background-color: #fff; /* Default light background */
+  color: #000; /* Default text color */
+  font-family: "Roboto", Arial, sans-serif; /* Primary font with fallback */
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+body.dark-theme .about-me-section p {
+  color: #e0e0e0; /* Ensuring paragraphs in the about-me-section inherit this color in dark mode */
+}
+
+/* Light Mode Specific Styles */
+body:not(.dark-theme) {
+  /* Header in Light Mode */
+  header {
+    background-color: transparent;
+    color: #333;
+  }
+
+  /* Footer in Light Mode */
+  footer {
+    background-color: transparent;
+    color: #333;
+    padding: 20px;
+    margin-top: 3rem;
+  }
+
+  /* Navigation Links in Light Mode */
+  .header-link,
+  .footer-links a {
+    color: #007bff;
+  }
+
+  .header-link:hover,
+  .footer-links a:hover {
+    color: #0056b3;
+  }
+
+  /* Role Cards in Light Mode */
+  .role-card {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+}
+
+/* Main Container */
+.main-container {
+  width: 600px;
+  margin: 0 auto;
+}
+
+/* Header Styles */
+header {
+  background-color: transparent;
+  color: #e0e0e0;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 100px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.header-content .header-link {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.header-content .header-link:first-child {
+  margin-right: auto;
+}
+
+.center-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.header-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Navigation Links */
+.header-link,
+.footer-links a {
+  color: #bb86fc;
+  text-decoration: none;
+}
+
+.header-link:hover,
+.footer-links a:hover {
+  color: #03dac6;
+}
+
+.header-link.active {
+  font-weight: bold;
+  color: #007bff;
+  position: relative;
+  text-decoration: none;
+}
+
+.header-link.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  height: 2px;
+  background-color: #007bff;
+  width: 80%;
+  transform: translateX(-50%);
+}
+
+/* Footer Styles */
+footer {
+  background-color: transparent;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.9em; /* Smaller font size for footer */
+  margin-top: 3rem;
+}
+
+.footer-links {
+  font-size: 14px;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer-text {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+/* Role Cards */
+.role-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  transition: box-shadow 0.3s ease;
+}
+
+.role-card:hover {
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+}
+
+.company-logo {
+    width: 50px; /* Set a standard width */
+    height: auto; /* Height is auto to maintain aspect ratio */
+    object-fit: contain; /* Ensures image is scaled properly */
+    margin-right: 10px;
+}
+
+
+.text-content h3,
+.text-content p {
+  margin: 0;
+}
+
+.date-content {
+  text-align: right;
+}
+
+.date-content p {
+  margin: 0;
+}
+
+.dates {
+  font-weight: bold;
+}
+
+/* About Me Section */
+.about-me-section p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #333;
+}
+
+.about-me-photo {
+  width: 400px; /* Adjust this value as needed */
+  height: 400px; /* Same as width to maintain a square shape */
+  object-fit: cover; /* This ensures the image is not distorted */
+  display: block;
+  margin: 0 auto;
+}
+
+.intro {
+  margin-bottom: 3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-me-section {
+    padding: 10px;
+  }
+
+  .about-me-section p {
+    font-size: 1em;
+  }
+
+  .main-container {
+    width: 90%;
+  }
+
+  header {
+    padding: 10px 0;
+  }
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .role-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .company-logo {
+    margin-bottom: 10px;
+    width: 100px; /* Adjust this value as needed */
+    height: auto; /* This will maintain the aspect ratio */
+    object-fit: contain; /* This prevents distortion */
+  }
+
+  .date-content {
+    text-align: left;
+    margin-top: 10px;
+  }
+}
+
+.back-to-main {
+  padding-top: 3rem;
+}
+
+.back-to-main a {
+  color: #8ab4f8; /* Light blue color */
+  text-decoration: underline;
+  text-decoration-color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Lighter underline for contrast */
+  transition: color 0.3s ease, text-decoration-color 0.3s ease;
+}
+
+.back-to-main a:hover,
+.back-to-main a:focus {
+  color: #dabfff; /* Different color for hover/focus */
+  text-decoration-color: #dabfff; /* Matching underline color for hover/focus */
+}
+
+.resized-image {
+  width: 600px; /* Adjust the width as needed */
+  height: auto; /* Height set to auto to maintain aspect ratio */
+}
+
+/* Base styles for hyperlinks */
+.company-details a {
+  text-decoration: underline; /* Consistent underline for accessibility */
+  transition: color 0.3s ease, text-decoration-color 0.3s ease; /* Smooth transition */
+}
+
+/* Light Mode Specific Styles */
+body:not(.dark-theme) .company-details a {
+  color: #1a0dab; /* Deep blue for light mode */
+  text-decoration-color: #1a0dab; /* Matching underline color */
+}
+
+body:not(.dark-theme) .company-details a:hover,
+body:not(.dark-theme) .company-details a:focus {
+  color: #4e2a84; /* Purple shade for hover/focus in light mode */
+  text-decoration-color: #4e2a84; /* Matching underline color */
+}
+
+/* Dark Theme Styles */
+body.dark-theme .company-details a {
+  color: #8ab4f8; /* Light blue for dark mode */
+  text-decoration-color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Lighter underline for contrast */
+}
+
+body.dark-theme .company-details a:hover,
+body.dark-theme .company-details a:focus {
+  color: #dabfff; /* Soft violet for hover/focus in dark mode */
+  text-decoration-color: #dabfff; /* Matching underline color */
+}
+
+/* Toggle Switch */
+#theme-toggle {
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.theme-switch-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+pre {
+  background-color: #2a2a2a;
+  border-radius: 5px;
+  padding: 15px 20px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  color: #f8f8f2;
+  font-size: 0.95em;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+pre > code {
+  font-size: 1em;
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
+}
+body:not(.dark-theme) pre {
+  background-color: #f5f5f5; /* Lighter background for light mode */
+  color: #333; /* Darker text color for readability */
+}
+
+body:not(.dark-theme) code {
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.07); /* Slightly darker background for code blocks */
+}
+
+body:not(.dark-theme) pre > code {
+  color: inherit;
+  background-color: transparent;
+}
