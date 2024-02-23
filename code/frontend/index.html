@@ -3,106 +3,124 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Julian Chuan Cloud Resume</title>
-    <link
-      rel="stylesheet"
-      href="https://s3.amazonaws.com/julianchuan.com/code/frontend/styles.css"
-    />
+    <title>Julian Chuan | Cloud Resume</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="resume">
-      <div class="top-section">
-        <div class="headshot-container">
-          <img
-            src="https://s3.amazonaws.com/julianchuan.com/assets/headshot.jpeg"
-            alt="Your Name"
-            class="resume-headshot"
-          />
+    <div class="main-container">
+      <header>
+        <div class="header-content">
+          <a href="about.html" class="header-link">About</a>
+          <div class="center-content">
+            <img
+              src="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/me.jpg?v=1704761086802"
+              alt="Profile Picture"
+              class="header-icon"
+            />
+          </div>
+          <a href="portfolio.html" class="header-link">Portfolio</a>
         </div>
-        <div class="contact-info">
-          <h1>Julian Chuan</h1>
-          <p>
-            <a href="mailto:julianchuan@proton.me">julianchuan@proton.me</a>
-          </p>
-          <p>
-            <a href="https://www.linkedin.com/in/julian-chuan/">LinkedIn</a>
-          </p>
-          <p>
-            <a href="https://github.com/JulianChuan">GitHub</a>
-          </p>
+      </header>
+
+      <main>
+        <section class="intro">
+          <h1>I'm Julian Chuan</h1>
+          <p>Solutions Engineer & Blockchain Advocate</p>
+        </section>
+
+        <!-- Professional Experience Section -->
+        <section class="professional-experience">
+          <h2>Professional Experience</h2>
+          <!-- Insert role cards here -->
+          <a href="activedraft.html" class="role-card">
+            <div class="card-content">
+              <img
+                src="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/ad-logo.png?v=1708192123881"
+                alt="ActiveDraft Company Logo"
+                class="company-logo"
+              />
+              <div class="text-content">
+                <h3>ActiveDraft</h3>
+                <p>Founding Solutions Engineer</p>
+              </div>
+            </div>
+            <div class="date-content">
+              <p>Q4 2023</p>
+            </div>
+          </a>
+          <a href="immutable.html" class="role-card">
+            <div class="card-content">
+              <img
+                src="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/imx-logo.jpg?v=1708191971047"
+                alt="Immutable Company Logo"
+                class="company-logo"
+              />
+              <div class="text-content">
+                <h3>Immutable</h3>
+                <p>Integration Engineer</p>
+              </div>
+            </div>
+            <div class="date-content">
+              <p>Q4 2022</p>
+            </div>
+          </a>
+          <a href="zenledger.html" class="role-card">
+            <div class="card-content">
+              <img
+                src="company-logo.jpg"
+                alt="ZenLedger Company Logo"
+                class="company-logo"
+              />
+              <div class="text-content">
+                <h3>ZenLedger</h3>
+                <p>Solutions Engineer & Growth/Product Development</p>
+              </div>
+            </div>
+            <div class="date-content">
+              <p>Q1 2022</p>
+            </div>
+          </a>
+          <a href="appsketiers.html" class="role-card">
+            <div class="card-content">
+              <img
+                src="company-logo.jpg"
+                alt="Appsketiers Company Logo"
+                class="company-logo"
+              />
+              <div class="text-content">
+                <h3>Appsketiers</h3>
+                <p>Account Executive & Product Designer</p>
+              </div>
+            </div>
+            <div class="date-content">
+              <p>Q2 2018</p>
+            </div>
+          </a>
+
+          <!-- More role cards can be added in a similar manner -->
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-links">
+          <a href="mailto:julianchuan@proton.me">Email</a>
+          |
+          <a href="https://github.com/JulianChuan">GitHub</a>
+          |
+          <a href="https://twitter.com/buy_eth">Twitter</a>
+          |
+          <a href="https://linkedin.com/in/julian-chuan">LinkedIn</a>
+          |
+          <a href="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/Julian%20Chuan%20Resume.pdf?v=1708636770584" target="_blank">Resume</a>
         </div>
-      </div>
-
-      <section class="resume-section" id="experience">
-        <h2>Professional Experience</h2>
-        <div id="timeline"></div>
-        <!-- Placeholder for timeline entries -->
-      </section>
-
-      <section class="resume-section" id="education">
-        <h2>Education</h2>
-        <ul>
-          <li>
-            <span class="degree"
-              >Bachelor of Science in Computer Information System</span
-            >
-            <span class="school">Concentration in Cybersecurity, 2019 </span>
-            <p>
-              Awards and Honors: DECA Emerging Leader, Georgia State University
-              Dean's List, Adobe Certified Associates
-            </p>
-          </li>
-        </ul>
-      </section>
-
-      <section class="resume-section" id="certifications">
-        <h2>Core Compentencies</h2>
-        <ul>
-          <li>
-            <span class="degree">Web 3</span>
-            <span class="school">Tech Stack</span>
-            <p>
-              <i>
-                Web3.js, Ether.js, Solidity, Wallet Connect, Magic.Link,
-                Immutable X Suite, Web3Auth, Alchemy, IPFS, Pinata, Ore ID
-              </i>
-            </p>
-            <br />
-            <span class="school">Blockchains</span>
-            <p>
-              <i>
-                Ethereum, Fantom, Linea, zkSync Era, Base, Optimism, Avalanche,
-                Arbitrum, Harmony, Polygon, Aurora, Mantle
-              </i>
-            </p>
-          </li>
-
-          <li>
-            <span class="degree">Web 2</span>
-            <span class="school">Tech Stack</span>
-            <p>
-              <i>
-                JavaScript, TypeScript, SQL, Java, Salesforce, HubSpot,
-                ZoomInfo, Adobe Suite, Figma, Postman, VS Code, Unity, Unreal
-                Engine, GitHub, Asana, OpenAPI, OAuth, Jira, Confluence, Asana
-              </i>
-            </p>
-          </li>
-          <li>
-            <span class="degree">Web 0</span>
-            <span class="school">Personal Stack</span>
-            <p>
-              <i>
-                Mandarin Chinese, Taekwondo (Black Belt), BJJ, League of Legends
-                (Gold), Hall County Library System, Hands on ATL, Books for
-                Africa, DeFi protocols
-              </i>
-            </p>
-          </li>
-        </ul>
-      </section>
+        <p class="footer-text">
+          Hand Coded & Cloud Architected with ❤️ by Julian Chuan. &copy; 2024
+        </p>
+      </footer>
     </div>
-
-    <script src="https://s3.amazonaws.com/julianchuan.com/code/frontend/scripts.js"></script>
+    <div class="theme-switch-container">
+      <button id="theme-toggle">Toggle Dark/Light Mode</button>
+    </div>
+    <script src="theme-switch.js"></script>
   </body>
 </html>
