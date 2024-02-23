@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Julian Chuan | Linea ERC20 Guide</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <header>
+        <div class="header-content">
+          <a href="about.html" class="header-link">About</a>
+          <div class="center-content">
+            <a href="index.html">
+              <img
+                src="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/me.jpg?v=1704761086802"
+                alt="Profile Picture"
+                class="header-icon"
+              />
+            </a>
+          </div>
+          <a href="portfolio.html" class="header-link">Portfolio</a>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Introduction Section -->
+        <section class="company-details">
+          <h1>
+            Deploying an ERC20 on Testnet
+            <img
+              src="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/aws-logo.png?v=1708202158407"
+              alt="Linea Logo"
+              style="width: 50px; height: auto; vertical-align: middle"
+            />
+          </h1>
+          <p>
+            Linea is a network that scales the experience of Ethereum. Its
+            out-of-the-box compatibility with the Ethereum Virtual Machine
+            enables the deployment of already-existing applications, as well as
+            the creation of new ones that would be too costly on Mainnet. It
+            also enables the community to use those dapps, at a fraction of the
+            cost, and at multiples the speed of Mainnet.
+          </p>
+        </section>
+
+        <!-- Detailed Description -->
+        <section class="company-details">
+          <h2>Introduction to ERC20 Tokens</h2>
+          <p>
+            ERC20 stands for Ethereum Request for Comment 20 and represents a
+            standard interface for token contracts on the Ethereum blockchain.
+            It has become the de facto standard for Ethereum tokens, allowing
+            for interoperability between various applications and contracts.
+            These tokens can represent anything from loyalty points to assets
+            and even other cryptocurrencies.
+          </p>
+
+          <h2>Gateway into Blockchain</h2>
+          <p>
+            If you are completely new to blockchain, then we'll first need some
+            tools to let us in the door. MetaMask is a swiss-army knife designed
+            for the digital ecosystem.
+          </p>
+          <ol>
+            <li>
+              <strong>Creating a Wallet</strong>
+              <p>
+                Download <a href="https://metamask.io/download/">MetaMask</a>
+              </p>
+              <strong>OR</strong>
+              <p>
+                If you already have a wallet, then we'll need to connect to the
+                Linea testnet.
+              </p>
+              <p>
+                <a href="https://chainlist.org/">ChainList</a> is an open-source
+                tool created by the Founder of DeFi Lama. Think of this as a
+                Web3 directory for you to look up EVM networks.
+              </p>
+            </li>
+            <li>
+              <strong>Funding your Wallet</strong>
+              <p>
+                Because we will be interacting with a blockchain, we will need
+                some ETH in order to pay for our transactions. There are a
+                couple of different ways to fund a wallet, but I will be
+                touching on 2 of the simpliest.
+              </p>
+              <p>
+                Infura is a Web3 infrastructure provider and they have built a
+                platform to give users ETH, otherwise known as a
+                <a href="https://faucet.goerli.linea.build/">faucet</a>
+              </p>
+              <p>
+                Additionally, Consensys has built a canonical
+                <a href="https://bridge.linea.build/bridge">bridge</a>
+                for existing Web3 users to transfer their ERC20s into Linea.
+              </p>
+            </li>
+            <li>
+              <strong>Setting Up the Environment</strong>
+              <p>
+                Because I'm on a Windows machine, I will be using VS Code and
+                Truffle. Truffle is a world class development environment,
+                testing framework and asset pipeline for blockchains using the
+                EVM to make life easier as a developer.
+              </p>
+              <p>
+                <a href="https://trufflesuite.com/docs/truffle/how-to/install/">
+                  Here</a
+                >
+                is a quick startup guide on how to install Truffle on your
+                device.
+              </p>
+            </li>
+          </ol>
+
+          <h2>Creating an ERC20 Smart Contract</h2>
+          <p>
+            For a Smart Contract to be considered an ERC-20 Token Contract, then
+            it is required to implement the following methods and events. Once
+            deployed, it will be responsible to keep track of the created tokens
+            on Ethereum or any EVM chain.
+          </p>
+          <ol>
+            <li>
+              <strong>Methods:</strong>
+
+              <pre>
+function name() public view returns (string)
+function symbol() public view returns (string)
+function decimals() public view returns (uint8)
+function totalSupply() public view returns (uint256)
+function balanceOf(address _owner) public view returns (uint256 balance)
+function transfer(address _to, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+function approve(address _spender, uint256 _value) public returns (bool success)
+function allowance(address _owner, address _spender) public view returns (uint256 remaining)
+</pre
+              >
+            </li>
+            <li>
+              <strong>Events:</strong>
+
+              <pre>
+event Transfer(address indexed _from, address indexed _to, uint256 _value)
+event Approval(address indexed _owner, address indexed _spender, uint256 _value)</pre
+              >
+            </li>
+            <li>
+              <strong>Example Contract</strong>
+              <p>
+                For simplicity's sake, I will not be showing the entire contract
+                but rather a skeleton so you can see the structure of an ERC20
+                Smart Contract. Below you can see the exact code I wrote for my
+                Token.
+              </p>
+              <pre><code>contract JulianCoin {
+    string public name = "Julian Coin";
+    string public symbol = "Juju";
+    uint8 public decimals = 18;
+    uint256 public totalSupply = 8888 * (10 ** uint256(decimals));
+    mapping(address =&gt; uint256) public balanceOf;
+    mapping(address =&gt; mapping(address =&gt; uint256)) public allowance;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    constructor() public {
+        balanceOf[msg.sender] = totalSupply;
+        emit Transfer(address(0), msg.sender, totalSupply);
+    }
+
+    function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(_to != address(0), "Invalid address");
+        require(balanceOf[msg.sender] &gt;= _value, "Insufficient balance");
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    function approve(address _spender, uint256 _value) public returns (bool success) {
+        allowance[msg.sender][_spender] = _value;
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+        require(_to != address(0), "Invalid address");
+        require(balanceOf[_from] &gt;= _value, "Insufficient balance");
+        require(allowance[_from][msg.sender] &gt;= _value, "Allowance exceeded");
+        balanceOf[_from] -= _value;
+        balanceOf[_to] += _value;
+        allowance[_from][msg.sender] -= _value;
+        emit Transfer(_from, _to, _value);
+        return true;
+    }
+}</code></pre>
+            </li>
+            <li>
+              <strong>Migration Script</strong>
+              <p>
+                Migrations are ways for developers to automate the deployment of
+                data and its supporting structures. THey are very useful for
+                managing the deployment for new software version. Truffle
+                migrations enable us to push the smart contract to the Ethereum
+                blockchain and to set up necessary steps for linking contracts
+                with other contracts as well as populate contracts with initial
+                data.
+              </p>
+
+              You will need to create a <code>1_deploy_token.js</code> in the
+              <code>migrations</code> directory and add the following code:
+              <pre><code>const JulianCoin = artifacts.require("JulianCoin");
+
+module.exports = function(deployer) {
+  deployer.deploy(JulianCoin);
+};</code></pre>
+            </li>
+          </ol>
+
+          <h2>Deploy Your Smart Contract</h2>
+          <p>
+            With Truffle, they have front-end dashboard where we can deploy our
+            Smart Contract using our MetaMask wallet right through our browser!
+          </p>
+          <ol>
+            <li>
+              <strong
+                >Configure our <code>truffle-config.js</code> file like
+                so:</strong
+              >
+              <pre><code>require("dotenv").config();
+const { MNEMONIC } = process.env;
+
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+
+module.exports = {
+  networks: {
+    linea_testnet: {
+      provider: () =&gt; {
+        return new HDWalletProvider(
+          MNEMONIC,
+          `https://rpc.goerli.linea.build/`,
+        );
+      },
+      network_id: "59140",
+    },
+    linea_mainnet: {
+      provider: () =&gt; {
+        return new HDWalletProvider(
+          MNEMONIC,
+          `https://rpc.linea.build/`,
+        );
+      },
+      network_id: "59140",
+    },
+  },
+  // ... rest of truffle-config.js
+};</code></pre>
+            </li>
+            <li>
+              <strong
+                >Call
+                <code>truffle migrate --network linea_testnet</code></strong
+              >
+              <p>Your output should look similar to the following:</p>
+              <pre><code>Compiling your contracts...
+===========================
+&gt; Everything is up to date, there is nothing to compile.
+
+Starting migrations...
+======================
+&gt; Network name:    'linea'
+&gt; Network id:      59140
+&gt; Block gas limit: 30000000 (0x1c9c380)
+
+1_deploy_token.js
+=================
+
+  Deploying 'Token'
+  -----------------
+  &gt; transaction hash:    0x412d58eaf4cc387fe1efa52b105f6fadac36db934b1617d04eaefc1947197525
+  &gt; Blocks: 0            Seconds: 0
+  &gt; contract address:    0x33b4D321Fc300E4f402820052EFA0958272D2AE5
+  &gt; block number:        143419
+  &gt; block timestamp:     1677366505
+  &gt; account:             YOUR_ACCOUNT_NUMBER
+  &gt; balance:             0.088400819995522296
+  &gt; gas used:            639672 (0x9c2b8)
+  &gt; gas price:           2.500000007 gwei
+  &gt; value sent:          0 ETH
+  &gt; total cost:          0.001599180004477704 ETH
+
+  &gt; Saving artifacts
+  -------------------------------------
+  &gt; Total cost:     0.001599180004477704 ETH
+
+Summary
+=======
+&gt; Total deployments:   1
+&gt; Final cost:          0.001599180004477704 ETH
+``` --&gt;</code></pre>
+            </li>
+          </ol>
+
+          <h2>Wrapping Up</h2>
+          <p>
+            Successfully creating an ERC20 token is a testament to the
+            versatility and innovation within the Ethereum ecosystem. This
+            foundational skill opens doors to numerous applications, from
+            crowdfunding campaigns to decentralized applications and beyond. As
+            the blockchain landscape continues to evolve, the knowledge and
+            expertise in crafting such tokens will undoubtedly remain a prized
+            asset.
+          </p>
+          <a
+            href="https://explorer.goerli.linea.build/address/0x8854754FA9fc352C7f05A4203538288DB72197c9"
+            target="_blank"
+          >
+            <button>View My Contract</button>
+          </a>
+        </section>
+
+        <!-- Back to Main Page -->
+        <div class="back-to-main">
+          <a href="index.html">← Back to Main Page</a>
+        </div>
+      </main>
+      <footer>
+        <div class="footer-links">
+          <a href="mailto:julianchuan@proton.me">Email</a>
+          |
+          <a href="https://github.com/JulianChuan">GitHub</a>
+          |
+          <a href="https://twitter.com/buy_eth">Twitter</a>
+          |
+          <a href="https://linkedin.com/in/julian-chuan">LinkedIn</a>
+          |
+          <a
+            href="https://cdn.glitch.global/9aed5caf-a1b2-4de4-97cf-64443d6a4a48/Julian%20Chuan%20Resume.pdf?v=1708636770584"
+            target="_blank"
+            >Resume</a
+          >
+        </div>
+        <p class="footer-text">
+          Hand Coded & Cloud Architected with ❤️ by Julian Chuan. &copy; 2024
+        </p>
+      </footer>
+    </div>
+    <div class="theme-switch-container">
+      <button id="theme-toggle">Toggle Dark/Light Mode</button>
+    </div>
+    <script src="theme-switch.js"></script>
+  </body>
+</html>
