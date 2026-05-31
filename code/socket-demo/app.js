@@ -224,8 +224,8 @@ async function fetchPackageData(name, version, apiKey) {
 
   // Fetch score and issues in parallel
   const [scoreRes, issuesRes] = await Promise.allSettled([
-    fetchWithRetry(apiUrl(`/packages/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/score`), headers),
-    fetchWithRetry(apiUrl(`/packages/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/issues`), headers),
+    fetchWithRetry(apiUrl(`/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/score`), headers),
+    fetchWithRetry(apiUrl(`/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/issues`), headers),
   ]);
 
   if (scoreRes.status === 'fulfilled' && scoreRes.value.ok) {
