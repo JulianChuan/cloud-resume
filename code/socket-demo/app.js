@@ -175,9 +175,26 @@ async function startScan() {
   localStorage.setItem('socket_api_key', apiKey);
 
   showScreen('screen-scanning');
-  currentResults = await scanPackages(packages, apiKey);
+  try {
+    currentResults = await scanPackages(packages, apiKey);
+  } catch (err) {
+    showScreen('screen-input');
+    showError(scanErrorMessage(err));
+    return;
+  }
   buildReport(currentResults, packages.length);
   showScreen('screen-report');
+}
+
+// Turn a thrown scan error into a friendly, specific message.
+function scanErrorMessage(err) {
+  switch (err && err.code) {
+    case 'invalid_key':  return 'Your API key was rejected (401/403). Check the token at socket.dev and that it has organization access.';
+    case 'no_org':       return 'No organization is associated with this API key. Create or join an org at socket.dev, then retry.';
+    case 'org_failed':   return `Couldn't load your Socket organization (HTTP ${err.status || '?'}). Please try again.`;
+    case 'batch_failed': return `Socket rejected the scan (HTTP ${err.status || '?'}).${err.detail ? ' ' + String(err.detail).slice(0, 200) : ''}`;
+    default:             return 'Something went wrong reaching Socket. Check your connection and the Lambda proxy, then retry.';
+  }
 }
 
 // Strip semver range operators to get a usable version string
@@ -187,71 +204,122 @@ function cleanVersion(range) {
 }
 
 // ── API Calls ──
+// Mirrors the real Socket product flow: resolve the org tied to the token,
+// then submit every dependency in ONE batch call to the current (non-deprecated)
+// /v0/orgs/{org_slug}/purl endpoint, which streams back package metadata + alerts.
 async function scanPackages(packages, apiKey) {
-  const results = [];
+  const authHeader = 'Basic ' + btoa(apiKey + ':');
   const total = packages.length;
 
-  for (let i = 0; i < total; i++) {
-    const pkg = packages[i];
-    const progress = Math.round(((i) / total) * 100);
+  // 1) Resolve the organization slug associated with this API token.
+  scanStatus.textContent = 'Connecting to Socket…';
+  scanDetail.textContent = 'Resolving organization';
+  progressBar.style.width = '15%';
+  scanCount.textContent = '';
 
-    scanStatus.textContent = `Scanning ${total} package${total !== 1 ? 's' : ''}…`;
-    scanDetail.textContent = pkg.name;
-    progressBar.style.width = progress + '%';
-    scanCount.textContent = `${i} / ${total} complete`;
+  const orgSlug = await getOrgSlug(authHeader);
 
-    const result = await fetchPackageData(pkg.name, pkg.version, apiKey);
-    results.push({ ...pkg, ...result });
+  // 2) Submit all packages as PURLs in a single batch request.
+  scanStatus.textContent = `Scanning ${total} package${total !== 1 ? 's' : ''}…`;
+  scanDetail.textContent = 'Querying Socket package intelligence';
+  progressBar.style.width = '45%';
+  scanCount.textContent = `${total} package${total !== 1 ? 's' : ''} submitted`;
 
-    // Small delay to be polite to the API
-    if (i < total - 1) await sleep(120);
+  const components = packages.map(p => ({ purl: toPurl(p.name, p.version) }));
+
+  const res = await fetchWithRetry(
+    apiUrl(`/orgs/${orgSlug}/purl?alerts=true`),
+    {
+      method: 'POST',
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/json',
+        Accept: 'application/x-ndjson',
+      },
+      body: JSON.stringify({ components }),
+    }
+  );
+
+  if (res.status === 401 || res.status === 403) throw withCode(new Error('auth'), 'invalid_key');
+  if (!res.ok) {
+    const e = withCode(new Error('batch'), 'batch_failed');
+    e.status = res.status;
+    try { e.detail = await res.text(); } catch { /* ignore */ }
+    throw e;
   }
 
+  scanDetail.textContent = 'Analyzing results';
+  progressBar.style.width = '80%';
+
+  // 3) Parse the NDJSON stream and index real artifacts by package name.
+  const lines = parseNdjson(await res.text());
+  const byName = new Map();
+  for (const a of lines) {
+    if (a && a.name && !a._type && !byName.has(a.name)) byName.set(a.name, a);
+  }
+
+  // 4) Map each requested package back to its artifact (or mark unresolved).
+  const results = packages.map(p => {
+    const art = byName.get(p.name);
+    if (!art) return { ...p, error: true, alerts: [], score: null };
+    return {
+      ...p,
+      alerts: Array.isArray(art.alerts) ? art.alerts : [],
+      score: art.score || null,
+      direct: art.direct,
+      dead: art.dead,
+      resolvedVersion: art.version,
+      error: false,
+    };
+  });
+
   progressBar.style.width = '100%';
-  scanCount.textContent = `${total} / ${total} complete`;
+  scanCount.textContent = `${total} / ${total} analyzed`;
   return results;
 }
 
-async function fetchPackageData(name, version, apiKey) {
-  const headers = {
-    Authorization: 'Basic ' + btoa(apiKey + ':'),
-    Accept: 'application/json',
-  };
-
-  let score = null;
-  let issues = [];
-  let error = false;
-
-  // Fetch score and issues in parallel
-  const [scoreRes, issuesRes] = await Promise.allSettled([
-    fetchWithRetry(apiUrl(`/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/score`), headers),
-    fetchWithRetry(apiUrl(`/npm/${encodeURIComponent(name)}/${encodeURIComponent(version)}/issues`), headers),
-  ]);
-
-  if (scoreRes.status === 'fulfilled' && scoreRes.value.ok) {
-    try { score = await scoreRes.value.json(); } catch { /* ignore */ }
-  } else if (scoreRes.status === 'fulfilled' && scoreRes.value.status === 401) {
-    return { error: 'invalid_key' };
+// GET /v0/organizations → pick the slug of the first org on this token.
+async function getOrgSlug(authHeader) {
+  const res = await fetchWithRetry(apiUrl('/organizations'), {
+    headers: { Authorization: authHeader, Accept: 'application/json' },
+  });
+  if (res.status === 401 || res.status === 403) throw withCode(new Error('auth'), 'invalid_key');
+  if (!res.ok) {
+    const e = withCode(new Error('org'), 'org_failed');
+    e.status = res.status;
+    throw e;
   }
-
-  if (issuesRes.status === 'fulfilled' && issuesRes.value.ok) {
-    try {
-      const body = await issuesRes.value.json();
-      issues = Array.isArray(body) ? body : (body.issues || body.results || []);
-    } catch { /* ignore */ }
-  }
-
-  if (!score && issues.length === 0) {
-    error = true;
-  }
-
-  return { score, issues, error };
+  const data = await res.json();
+  const orgs = data && data.organizations ? Object.values(data.organizations) : [];
+  const slug = orgs.find(o => o && o.slug)?.slug;
+  if (!slug) throw withCode(new Error('no org'), 'no_org');
+  return slug;
 }
 
-async function fetchWithRetry(url, headers, retries = 2) {
+// Build a Package URL (purl) for an npm package. Scoped names (@scope/pkg)
+// are valid inside the purl string as-is.
+function toPurl(name, version) {
+  const hasVersion = version && version !== 'latest';
+  return hasVersion ? `pkg:npm/${name}@${version}` : `pkg:npm/${name}`;
+}
+
+// Parse newline-delimited JSON, skipping blank or partial lines.
+function parseNdjson(text) {
+  const out = [];
+  for (const line of String(text).split('\n')) {
+    const t = line.trim();
+    if (!t) continue;
+    try { out.push(JSON.parse(t)); } catch { /* skip */ }
+  }
+  return out;
+}
+
+function withCode(err, code) { err.code = code; return err; }
+
+async function fetchWithRetry(url, options = {}, retries = 2) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const res = await fetch(url, { headers });
+      const res = await fetch(url, options);
       if (res.status === 429 && attempt < retries) {
         await sleep(1500);
         continue;
@@ -294,50 +362,47 @@ function buildReport(results, totalScanned) {
 }
 
 function classifyPackage(pkg) {
-  const issues = pkg.issues || [];
-  const score  = pkg.score;
+  // Normalize each Socket alert's severity into our four buckets.
+  const rawAlerts = Array.isArray(pkg.alerts) ? pkg.alerts : [];
+  const issues = rawAlerts.map(a => ({
+    type: a.type,
+    severity: normalizeSeverity(a.severity),
+    category: a.category,
+    action: a.action,
+    fix: a.fix,
+  }));
 
-  // Determine severity from issues
   let severity = 'clean';
-  const hasCritical = issues.some(i => i.severity === 'critical');
-  const hasHigh     = issues.some(i => i.severity === 'high');
-  const hasMedium   = issues.some(i => i.severity === 'medium');
-  const hasLow      = issues.some(i => i.severity === 'low' || i.severity === 'warning');
-
-  if (hasCritical) severity = 'critical';
-  else if (hasHigh) severity = 'high';
-  else if (hasMedium) severity = 'medium';
-  else if (hasLow) severity = 'low';
+  if (issues.some(i => i.severity === 'critical'))    severity = 'critical';
+  else if (issues.some(i => i.severity === 'high'))   severity = 'high';
+  else if (issues.some(i => i.severity === 'medium')) severity = 'medium';
+  else if (issues.some(i => i.severity === 'low'))    severity = 'low';
   else if (pkg.error) severity = 'unknown';
 
-  // Overall score 0-100
-  let overallScore = null;
-  if (score?.score?.overall !== undefined) {
-    overallScore = Math.round(score.score.overall * 100);
-  } else if (score?.overall !== undefined) {
-    overallScore = Math.round(score.overall * 100);
-  }
-
-  // Maintenance score
-  let maintenanceScore = null;
-  if (score?.score?.maintenance !== undefined) {
-    maintenanceScore = Math.round(score.score.maintenance * 100);
-  }
-
-  // Supply chain score
-  let supplyChainScore = null;
-  if (score?.score?.supplyChain !== undefined) {
-    supplyChainScore = Math.round(score.score.supplyChain * 100);
-  }
+  // Socket scores are 0–1 floats; present them as 0–100.
+  const s = pkg.score || {};
+  const pct = v => (v === undefined || v === null) ? null : Math.round(v > 1 ? v : v * 100);
 
   return {
     ...pkg,
     severity,
     issues,
-    overallScore,
-    maintenanceScore,
-    supplyChainScore,
+    overallScore:       pct(s.overall),
+    supplyChainScore:   pct(s.supplyChain),
+    maintenanceScore:   pct(s.maintenance),
+    vulnerabilityScore: pct(s.vulnerability),
+    qualityScore:       pct(s.quality),
+    licenseScore:       pct(s.license),
   };
+}
+
+// Socket alert severities are: low | middle | high | critical (note: "middle").
+function normalizeSeverity(sev) {
+  const s = String(sev || '').toLowerCase();
+  if (s === 'critical') return 'critical';
+  if (s === 'high') return 'high';
+  if (s === 'medium' || s === 'middle' || s === 'warn' || s === 'warning') return 'medium';
+  return 'low';
 }
 
 // ── Executive Summary ──
@@ -490,19 +555,27 @@ function buildDetailHTML(pkg) {
         <div class="detail-value">${scoreBar(pkg.overallScore)}</div>
       </div>
       <div class="detail-item">
-        <div class="detail-label">Maintenance</div>
-        <div class="detail-value">${scoreBar(pkg.maintenanceScore)}</div>
-      </div>
-      <div class="detail-item">
         <div class="detail-label">Supply Chain</div>
         <div class="detail-value">${scoreBar(pkg.supplyChainScore)}</div>
       </div>
       <div class="detail-item">
-        <div class="detail-label">Issues Found</div>
+        <div class="detail-label">Vulnerability</div>
+        <div class="detail-value">${scoreBar(pkg.vulnerabilityScore)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Maintenance</div>
+        <div class="detail-value">${scoreBar(pkg.maintenanceScore)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Quality</div>
+        <div class="detail-value">${scoreBar(pkg.qualityScore)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Alerts Found</div>
         <div class="detail-value" style="font-size:18px;font-weight:700;color:${pkg.issues?.length ? severityColor(pkg.severity) : 'var(--green)'}">${pkg.issues?.length || 0}</div>
       </div>
     </div>
-    <div class="detail-label" style="margin-bottom:8px">Issue Detail</div>
+    <div class="detail-label" style="margin-bottom:8px">Socket Alerts</div>
     <div class="detail-issues">${issuesHTML}</div>
   `;
 }
