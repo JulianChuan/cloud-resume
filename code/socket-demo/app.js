@@ -156,19 +156,14 @@ async function startScan() {
     return;
   }
 
-  const deps = {
-    ...( pkg.dependencies    || {} ),
-    ...( pkg.devDependencies || {} ),
-  };
+  let packages = extractPackages(pkg);
 
-  const packages = Object.entries(deps).map(([name, versionRange]) => ({
-    name,
-    version: cleanVersion(versionRange),
-    rawVersion: versionRange,
-  }));
+  // A full lockfile can list hundreds of packages; cap the batch so the
+  // single proxied request stays within the Lambda's 30s timeout.
+  if (packages.length > 200) packages = packages.slice(0, 200);
 
   if (packages.length === 0) {
-    showError('No dependencies found in this package.json.');
+    showError('No dependencies found. Paste a package.json with a "dependencies" block, or a package-lock.json.');
     return;
   }
 
@@ -177,13 +172,14 @@ async function startScan() {
   showScreen('screen-scanning');
   try {
     currentResults = await scanPackages(packages, apiKey);
+    buildReport(currentResults, packages.length);
+    showScreen('screen-report');
   } catch (err) {
+    console.error('Scan/report failed:', err);
     showScreen('screen-input');
     showError(scanErrorMessage(err));
     return;
   }
-  buildReport(currentResults, packages.length);
-  showScreen('screen-report');
 }
 
 // Turn a thrown scan error into a friendly, specific message.
@@ -193,13 +189,50 @@ function scanErrorMessage(err) {
     case 'no_org':       return 'No organization is associated with this API key. Create or join an org at socket.dev, then retry.';
     case 'org_failed':   return `Couldn't load your Socket organization (HTTP ${err.status || '?'}). Please try again.`;
     case 'batch_failed': return `Socket rejected the scan (HTTP ${err.status || '?'}).${err.detail ? ' ' + String(err.detail).slice(0, 200) : ''}`;
-    default:             return 'Something went wrong reaching Socket. Check your connection and the Lambda proxy, then retry.';
+    default:             return `Something went wrong while building the report: ${(err && err.message) || 'unknown error'}. (Full details in the browser console.)`;
   }
 }
 
-// Strip semver range operators to get a usable version string
+// Pull a flat list of { name, version, rawVersion } from either a package.json
+// or a package-lock.json (v1, v2, or v3). Deduplicates by package name.
+function extractPackages(pkg) {
+  const out = [];
+  const seen = new Set();
+  const add = (name, rawVersion) => {
+    if (!name || seen.has(name)) return;
+    seen.add(name);
+    out.push({
+      name,
+      version: cleanVersion(rawVersion),
+      rawVersion: (typeof rawVersion === 'string' ? rawVersion : (rawVersion && rawVersion.version)) || 'latest',
+    });
+  };
+
+  // package-lock.json v2/v3: a "packages" map keyed by node_modules paths.
+  if (pkg && pkg.packages && typeof pkg.packages === 'object') {
+    for (const [path, meta] of Object.entries(pkg.packages)) {
+      if (!path) continue; // "" is the root project itself
+      const marker = 'node_modules/';
+      const i = path.lastIndexOf(marker);
+      const name = i >= 0 ? path.slice(i + marker.length) : path;
+      add(name, meta && meta.version);
+    }
+    if (out.length) return out;
+  }
+
+  // package.json (string versions) OR package-lock.json v1 (object values).
+  const deps = { ...(pkg && pkg.dependencies || {}), ...(pkg && pkg.devDependencies || {}) };
+  for (const [name, val] of Object.entries(deps)) {
+    add(name, typeof val === 'string' ? val : (val && val.version));
+  }
+  return out;
+}
+
+// Strip semver range operators to get a usable version string. Tolerates
+// non-string inputs (e.g. a lockfile's object value) so it never throws.
 function cleanVersion(range) {
-  if (!range || range === '*' || range === 'latest') return 'latest';
+  if (range && typeof range === 'object' && typeof range.version === 'string') range = range.version;
+  if (typeof range !== 'string' || !range || range === '*' || range === 'latest') return 'latest';
   return range.replace(/^[\^~>=<]+/, '').split(' ')[0].split('||')[0].trim() || 'latest';
 }
 
