@@ -136,11 +136,9 @@ async function startScan() {
     return;
   }
 
+  // The key is optional: if the visitor leaves it blank, the Lambda proxy
+  // falls back to a server-side demo key so they can try the tool instantly.
   const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) {
-    showError('Please enter your Socket API key. Get one free at socket.dev.');
-    return;
-  }
 
   const raw = jsonInput.value.trim();
   if (!raw) {
@@ -167,7 +165,7 @@ async function startScan() {
     return;
   }
 
-  localStorage.setItem('socket_api_key', apiKey);
+  if (apiKey) localStorage.setItem('socket_api_key', apiKey);
 
   showScreen('screen-scanning');
   try {
@@ -185,7 +183,7 @@ async function startScan() {
 // Turn a thrown scan error into a friendly, specific message.
 function scanErrorMessage(err) {
   switch (err && err.code) {
-    case 'invalid_key':  return 'Your API key was rejected (401/403). Check the token at socket.dev and that it has organization access.';
+    case 'invalid_key':  return 'The Socket API key was rejected (401/403). If you entered your own key, check it at socket.dev; otherwise the demo key may be temporarily unavailable — try again shortly.';
     case 'no_org':       return 'No organization is associated with this API key. Create or join an org at socket.dev, then retry.';
     case 'org_failed':   return `Couldn't load your Socket organization (HTTP ${err.status || '?'}). Please try again.`;
     case 'batch_failed': return `Socket rejected the scan (HTTP ${err.status || '?'}).${err.detail ? ' ' + String(err.detail).slice(0, 200) : ''}`;
@@ -241,7 +239,8 @@ function cleanVersion(range) {
 // then submit every dependency in ONE batch call to the current (non-deprecated)
 // /v0/orgs/{org_slug}/purl endpoint, which streams back package metadata + alerts.
 async function scanPackages(packages, apiKey) {
-  const authHeader = 'Basic ' + btoa(apiKey + ':');
+  // No key → no Authorization header, so the proxy uses the demo key instead.
+  const authHeader = apiKey ? 'Basic ' + btoa(apiKey + ':') : null;
   const total = packages.length;
 
   // 1) Resolve the organization slug associated with this API token.
@@ -265,7 +264,7 @@ async function scanPackages(packages, apiKey) {
     {
       method: 'POST',
       headers: {
-        Authorization: authHeader,
+        ...(authHeader ? { Authorization: authHeader } : {}),
         'Content-Type': 'application/json',
         Accept: 'application/x-ndjson',
       },
@@ -314,7 +313,7 @@ async function scanPackages(packages, apiKey) {
 // GET /v0/organizations → pick the slug of the first org on this token.
 async function getOrgSlug(authHeader) {
   const res = await fetchWithRetry(apiUrl('/organizations'), {
-    headers: { Authorization: authHeader, Accept: 'application/json' },
+    headers: { ...(authHeader ? { Authorization: authHeader } : {}), Accept: 'application/json' },
   });
   if (res.status === 401 || res.status === 403) throw withCode(new Error('auth'), 'invalid_key');
   if (!res.ok) {

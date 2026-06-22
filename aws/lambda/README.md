@@ -12,8 +12,19 @@ Socket — and only to Socket.
   exactly that host (defeats `@`-userinfo and subdomain-suffix bypasses).
 - **No redirect following** (`redirect: 'manual'`) so a 3xx can't bounce the
   request off the allowlisted host.
-- **No secrets stored.** The caller supplies their own Socket API key in the
-  `Authorization` header; it's forwarded and never persisted.
+- **No secrets in code.** Callers may supply their own Socket API key in the
+  `Authorization` header; it's forwarded, never persisted.
+- **Demo-key fallback.** If a request arrives with no `Authorization` header,
+  the proxy attaches a demo key read from the `SOCKET_DEMO_KEY` environment
+  variable. The key lives only in the Lambda's config — it is never sent to the
+  browser, so visitors can try the tool without their own key. Use a
+  dedicated, minimal-scope key on a throwaway Socket org for this.
+
+## Environment variables
+
+| Name | Required | Purpose |
+|---|---|---|
+| `SOCKET_DEMO_KEY` | optional | Socket API key used when a caller doesn't supply their own. Set it in the Lambda console under **Configuration → Environment variables**. Omit it to require every visitor to bring their own key. |
 
 ## Deploy
 

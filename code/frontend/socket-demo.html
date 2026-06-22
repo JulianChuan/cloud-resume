@@ -42,11 +42,11 @@
             <p>
               A live, self-contained web app that turns a project's
               <code>package.json</code> or <code>package-lock.json</code> into a
-              CISO-ready supply-chain risk report. Paste or drop a manifest, add
-              a free Socket API key, and it scans every dependency against
-              Socket's package intelligence — surfacing malware, typosquatting,
-              risky install scripts, and known CVEs the way a traditional CVE
-              scanner never would.
+              CISO-ready supply-chain risk report. Paste or drop a manifest and
+              it scans every dependency against Socket's package intelligence —
+              surfacing malware, typosquatting, risky install scripts, and known
+              CVEs the way a traditional CVE scanner never would. No signup
+              required: leave the key field blank to try it instantly.
             </p>
 
             <div style="text-align: center; margin: 2rem 0">
@@ -103,10 +103,12 @@
 
             <h2>🔒 Security notes</h2>
             <p>
-              The visitor's Socket API key stays in their own browser and is
-              sent only to Socket's API to run the scan. The Lambda proxy is
-              host-allowlisted to Socket, so it can't be abused as an open
-              forwarder. The full source lives on
+              Visitors can try it with no signup: a demo key lives only inside
+              the Lambda as a server-side environment variable, so it's never
+              exposed to the browser. If a visitor supplies their own key
+              instead, it stays in their browser and is sent only to Socket. The
+              Lambda proxy is host-allowlisted to Socket, so it can't be abused
+              as an open forwarder. The full source lives on
               <a href="https://github.com/JulianChuan/cloud-resume/tree/main/code/socket-demo" target="_blank">GitHub</a>.
             </p>
           </div>

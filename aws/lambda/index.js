@@ -28,8 +28,15 @@ export const handler = async (event) => {
   }
 
   const headers = event.headers || {};
-  const auth = headers.authorization || headers.Authorization;
   const contentType = headers['content-type'] || headers['Content-Type'];
+
+  // If the caller supplied their own Socket key, use it. Otherwise fall back to
+  // the demo key — kept here as a server-side env var so it never reaches the
+  // browser. This is what lets visitors try the tool without their own key.
+  let auth = headers.authorization || headers.Authorization;
+  if (!auth && process.env.SOCKET_DEMO_KEY) {
+    auth = 'Basic ' + Buffer.from(process.env.SOCKET_DEMO_KEY + ':').toString('base64');
+  }
 
   // Function URLs may base64-encode the body; decode it before forwarding.
   let body;
