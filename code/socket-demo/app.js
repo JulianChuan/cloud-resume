@@ -367,19 +367,11 @@ async function fetchWithRetry(url, options = {}, retries = 2) {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// ── Check for invalid API key in results ──
-function checkForKeyError(results) {
-  return results.some(r => r.error === 'invalid_key');
-}
-
 // ── Build Report ──
+// Invalid/expired keys are caught earlier in scanPackages (thrown as
+// 'invalid_key' and surfaced by scanErrorMessage), so by the time we get
+// here the results are real artifacts to render.
 function buildReport(results, totalScanned) {
-  if (checkForKeyError(results)) {
-    showScreen('screen-input');
-    showError('Your API key appears to be invalid or expired. Please check it and try again. Get a key at socket.dev/dashboard.');
-    return;
-  }
-
   const classified = results.map(classifyPackage);
 
   // Sort by severity

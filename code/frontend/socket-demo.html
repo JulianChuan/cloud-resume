@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Julian Chuan | Socket Supply-Chain Risk Scanner</title>
+    <link
+      rel="stylesheet"
+      href="/code/frontend/style.css"
+    />
+  </head>
+  <body>
+    <div class="main-container">
+      <header>
+        <div class="header-content">
+          <a href="https://julianchuan.com/code/frontend/about.html" class="header-link">About</a>
+          <div class="center-content">
+            <a href="index.html">
+              <img
+                src="/assets/headshot.jpeg"
+                alt="Profile Picture"
+                class="header-icon"
+              />
+            </a>
+          </div>
+          <a href="https://julianchuan.com/code/frontend/portfolio.html" class="header-link active">Portfolio</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <h1>
+            Socket Supply-Chain Risk Scanner
+            <img
+              src="/assets/socket-logo.svg"
+              alt="Socket Logo"
+              style="width: 50px; height: auto; vertical-align: middle"
+            />
+          </h1>
+
+          <div class="about-me-section">
+            <p>
+              A live, self-contained web app that turns a project's
+              <code>package.json</code> or <code>package-lock.json</code> into a
+              CISO-ready supply-chain risk report. Paste or drop a manifest, add
+              a free Socket API key, and it scans every dependency against
+              Socket's package intelligence — surfacing malware, typosquatting,
+              risky install scripts, and known CVEs the way a traditional CVE
+              scanner never would.
+            </p>
+
+            <div style="text-align: center; margin: 2rem 0">
+              <a
+                href="/code/socket-demo/index.html"
+                style="
+                  display: inline-block;
+                  padding: 14px 28px;
+                  background-color: #00c2ff;
+                  color: #0a0a0a;
+                  font-weight: 600;
+                  border-radius: 10px;
+                  text-decoration: none;
+                  box-shadow: 0 4px 14px rgba(0, 194, 255, 0.35);
+                "
+                >Launch Live Demo →</a
+              >
+            </div>
+
+            <h2>🎯 Why I built it</h2>
+            <p>
+              Coming from JFrog — where I worked next to Xray and
+              software-composition analysis — I wanted a hands-on artifact that
+              shows I can speak the supply-chain security language end to end:
+              the developer's manifest, the API that scores it, and the
+              executive narrative a security buyer actually cares about. This is
+              that artifact, built as a sales-engineering proof of concept I can
+              demo live.
+            </p>
+
+            <h2>⚙️ How it works</h2>
+            <p>
+              The front end is hand-written HTML, CSS, and vanilla JavaScript —
+              no framework. It parses npm manifests (including lockfile v1, v2,
+              and v3), builds Package URLs for each dependency, and submits them
+              in a single batch to Socket's
+              <code>/v0/orgs/{org}/purl</code> endpoint, streaming the results
+              back as newline-delimited JSON. Because Socket's API doesn't send
+              CORS headers, the browser can't call it directly — so requests are
+              routed through a small AWS Lambda proxy I wrote that
+              <em>only</em> forwards to <code>api.socket.dev</code> and rejects
+              anything else.
+            </p>
+
+            <h2>📊 The report</h2>
+            <p>
+              Findings are normalized into Critical / High / Medium / Low
+              buckets, sorted by severity, and rendered as an executive summary,
+              a stats row, and an expandable per-package table with Socket's
+              health scores. There's even a "what Socket would have done" panel
+              that frames the findings as a CI/CD firewall story — the same
+              way I'd position it in a real evaluation.
+            </p>
+
+            <h2>🔒 Security notes</h2>
+            <p>
+              The visitor's Socket API key stays in their own browser and is
+              sent only to Socket's API to run the scan. The Lambda proxy is
+              host-allowlisted to Socket, so it can't be abused as an open
+              forwarder. The full source lives on
+              <a href="https://github.com/JulianChuan/cloud-resume/tree/main/code/socket-demo" target="_blank">GitHub</a>.
+            </p>
+          </div>
+        </section>
+      <div class="back-to-main">
+          <a href="https://julianchuan.com/code/frontend/portfolio.html">← Back to Portfolio</a>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-links">
+          <a href="mailto:julianchuan@proton.me" target="_blank">Email</a>
+          |
+          <a href="https://github.com/JulianChuan" target="_blank">GitHub</a>
+          |
+          <a href="https://twitter.com/buy_eth" target="_blank">Twitter</a>
+          |
+          <a href="https://linkedin.com/in/julian-chuan" target="_blank">LinkedIn</a>
+          |
+          <a href="/assets/julian-resume.pdf" target="_blank">Resume</a>
+        </div>
+        <p class="footer-text">
+          Hand Coded & Cloud Architected with ❤️ by Julian Chuan. &copy; 2024
+        </p>
+      </footer>
+    </div>
+    <div class="theme-switch-container">
+      <button id="theme-toggle">Toggle Dark/Light Mode</button>
+    </div>
+    <script src="/code/frontend/theme-switch.js"></script>
+  </body>
+</html>
