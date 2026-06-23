@@ -24,4 +24,46 @@ function assemble(html, headerTpl, footerTpl) {
   return html;
 }
 
+const fs = require('fs');
+const path = require('path');
+
+const FRONTEND = __dirname;
+const SRC = path.join(FRONTEND, 'pages');
+const PARTIALS = path.join(FRONTEND, '_partials');
+const REPO = path.join(FRONTEND, '..', '..');
+const DIST = path.join(REPO, 'dist');
+const DIST_FRONTEND = path.join(DIST, 'code', 'frontend');
+
+function build() {
+  const headerTpl = fs.readFileSync(path.join(PARTIALS, 'header.html'), 'utf8');
+  const footerTpl = fs.readFileSync(path.join(PARTIALS, 'footer.html'), 'utf8');
+
+  // Start from a clean output tree so deletes in source propagate.
+  fs.rmSync(DIST, { recursive: true, force: true });
+  fs.mkdirSync(DIST_FRONTEND, { recursive: true });
+
+  // Assemble each source page into dist/code/frontend/<page>.html.
+  for (const file of fs.readdirSync(SRC)) {
+    if (!file.endsWith('.html')) continue;
+    const src = fs.readFileSync(path.join(SRC, file), 'utf8');
+    fs.writeFileSync(path.join(DIST_FRONTEND, file), assemble(src, headerTpl, footerTpl));
+  }
+
+  // Static siblings the pages load from /code/frontend/.
+  for (const asset of ['style.css', 'theme-switch.js']) {
+    fs.copyFileSync(path.join(FRONTEND, asset), path.join(DIST_FRONTEND, asset));
+  }
+
+  // Site assets served from /assets/.
+  fs.cpSync(path.join(REPO, 'assets'), path.join(DIST, 'assets'), { recursive: true });
+
+  // Root entrypoints: "/" serves index.html; error.html is the custom 404.
+  fs.copyFileSync(path.join(DIST_FRONTEND, 'index.html'), path.join(DIST, 'index.html'));
+  fs.copyFileSync(path.join(DIST_FRONTEND, 'error.html'), path.join(DIST, 'error.html'));
+
+  console.log('Built site to dist/');
+}
+
+if (require.main === module) build();
+
 module.exports = { assemble, renderHeader };
