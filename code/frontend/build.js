@@ -57,6 +57,10 @@ function build() {
   // Site assets served from /assets/.
   fs.cpSync(path.join(REPO, 'assets'), path.join(DIST, 'assets'), { recursive: true });
 
+  // The standalone Socket demo app is hosted at /code/socket-demo/ and linked
+  // from socket-demo.html; ship it verbatim (it has no header/footer to assemble).
+  fs.cpSync(path.join(REPO, 'code', 'socket-demo'), path.join(DIST, 'code', 'socket-demo'), { recursive: true });
+
   // Root entrypoints: "/" serves index.html; error.html is the custom 404.
   fs.copyFileSync(path.join(DIST_FRONTEND, 'index.html'), path.join(DIST, 'index.html'));
   fs.copyFileSync(path.join(DIST_FRONTEND, 'error.html'), path.join(DIST, 'error.html'));
