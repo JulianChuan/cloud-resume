@@ -4,12 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Julian Chuan | Portfolio</title>
-    <link
-      rel="stylesheet"
-      href="/code/frontend/style.css"
-    />
+    <meta name="description" content="Technical projects by Julian Chuan, including a Socket supply-chain risk scanner, the AWS Cloud Resume Challenge, and a Linea ERC20 guide." />
+    <meta property="og:title" content="Julian Chuan | Portfolio" />
+    <meta property="og:description" content="Technical projects by Julian Chuan, including a Socket supply-chain risk scanner, the AWS Cloud Resume Challenge, and a Linea ERC20 guide." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://julianchuan.com/assets/headshot.jpeg" />
+    <meta property="og:url" content="https://julianchuan.com/code/frontend/portfolio.html" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/jpeg" href="/assets/headshot.jpeg" />
+    <link rel="stylesheet" href="/code/frontend/style.css" />
   </head>
   <body>
+    <script>
+      // Apply saved theme before paint to avoid a flash of the wrong theme
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-theme");
+      }
+    </script>
     <div class="main-container">
       <header>
         <div class="header-content">
