@@ -19,22 +19,18 @@ jobs:
       with:
         node-version: '20'
 
-    # index.html and error.html must live at the bucket root so the site serves
-    # at "/" and renders the custom error page. Everything else is served from
-    # its original path via the assets/** and code/** include patterns below.
-    - name: Stage root entrypoints for deployment
-      run: |
-        cp code/frontend/index.html .
-        cp code/frontend/error.html .
+    - name: Build site
+      run: node code/frontend/build.js
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@be0c4ab89158cac4278689ebedd8407dd5f35a83 # v0.5.1
       with:
-        args: --follow-symlinks --delete --exclude '*' --include 'assets/**' --include 'code/**' --include 'index.html' --include 'error.html'
+        args: --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        SOURCE_DIR: dist
 
     # Tell CloudFront the files changed so the CDN serves the new copies
     # immediately instead of waiting for its cache TTL to expire.
