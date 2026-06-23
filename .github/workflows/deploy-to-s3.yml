@@ -5,26 +5,30 @@ on:
     branches:
       - main
 
+# Third-party actions are pinned to a full commit SHA (not a moving tag/branch)
+# so a compromise of the upstream repo can't silently run new code with our AWS
+# credentials. The trailing comment records the human-readable version.
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
-        node-version: '20' # Specify the Node.js version here
+        node-version: '20'
 
-    - name: Reorganize Files for Deployment
+    # index.html and error.html must live at the bucket root so the site serves
+    # at "/" and renders the custom error page. Everything else is served from
+    # its original path via the assets/** and code/** include patterns below.
+    - name: Stage root entrypoints for deployment
       run: |
-        cp -r assets/* .
-        cp -r code/frontend/* .
         cp code/frontend/index.html .
         cp code/frontend/error.html .
 
     - name: Deploy to S3
-      uses: jakejarvis/s3-sync-action@master
+      uses: jakejarvis/s3-sync-action@be0c4ab89158cac4278689ebedd8407dd5f35a83 # v0.5.1
       with:
         args: --follow-symlinks --delete --exclude '*' --include 'assets/**' --include 'code/**' --include 'index.html' --include 'error.html'
       env:
@@ -35,7 +39,7 @@ jobs:
     # Tell CloudFront the files changed so the CDN serves the new copies
     # immediately instead of waiting for its cache TTL to expire.
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
